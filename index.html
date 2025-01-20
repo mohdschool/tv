@@ -170,15 +170,16 @@
 
         .exam-table th, .exam-table td {
             border: 2px solid #004080;
-            padding: 10px;
+            padding: 15px; /* زيادة الحشو */
             text-align: center;
-            font-size: 18px;
+            font-size: 20px; /* زيادة حجم الخط */
             color: #004080;
         }
 
         .exam-table th {
             background-color: #004080;
             color: white;
+            font-size: 22px; /* زيادة حجم الخط للعناوين */
         }
 
         .countdown {
@@ -261,27 +262,27 @@
         @media (max-width: 768px) {
             /* التاريخ والساعة */
             .datetime {
-                top: 5px; /* تقليل المسافة من الأعلى */
-                font-size: 14px; /* تقليل حجم الخط */
+                top: 5px;
+                font-size: 14px;
             }
 
             .clock, .date {
-                padding: 5px; /* تقليل الحشو */
+                padding: 5px;
             }
 
             /* الرأس والشعار */
             header {
-                padding: 10px; /* تقليل الحشو */
-                margin-top: 40px; /* إضافة مسافة من الأعلى لتجنب التداخل */
+                padding: 10px;
+                margin-top: 40px;
             }
 
             header img {
-                width: 60px; /* تقليل حجم الشعار */
+                width: 60px;
             }
 
             header h1 {
-                font-size: 16px; /* تقليل حجم العنوان */
-                margin-top: 5px; /* تقليل المسافة بين الشعار والعنوان */
+                font-size: 16px;
+                margin-top: 5px;
             }
 
             /* أزرار الفترات */
@@ -312,27 +313,27 @@
         @media (max-width: 480px) {
             /* التاريخ والساعة */
             .datetime {
-                top: 3px; /* تقليل المسافة من الأعلى أكثر */
-                font-size: 12px; /* تقليل حجم الخط أكثر */
+                top: 3px;
+                font-size: 12px;
             }
 
             .clock, .date {
-                padding: 3px; /* تقليل الحشو أكثر */
+                padding: 3px;
             }
 
             /* الرأس والشعار */
             header {
-                padding: 8px; /* تقليل الحشو أكثر */
-                margin-top: 30px; /* إضافة مسافة من الأعلى أكثر */
+                padding: 8px;
+                margin-top: 30px;
             }
 
             header img {
-                width: 50px; /* تقليل حجم الشعار أكثر */
+                width: 50px;
             }
 
             header h1 {
-                font-size: 14px; /* تقليل حجم العنوان أكثر */
-                margin-top: 3px; /* تقليل المسافة بين الشعار والعنوان أكثر */
+                font-size: 14px;
+                margin-top: 3px;
             }
 
             /* أزرار الفترات */
@@ -363,7 +364,7 @@
         /* إعدادات عامة للشاشات الكبيرة */
         @media (min-width: 1200px) {
             body {
-                font-size: 20px; /* زيادة حجم الخط العام */
+                font-size: 22px; /* زيادة حجم الخط العام */
             }
 
             header h1 {
@@ -380,12 +381,16 @@
             }
 
             .exam-table th, .exam-table td {
-                font-size: 22px; /* زيادة حجم خط الجدول */
-                padding: 15px; /* زيادة الحشو للخلايا */
+                font-size: 24px; /* زيادة حجم خط الجدول */
+                padding: 20px; /* زيادة الحشو للخلايا */
+            }
+
+            .exam-table th {
+                font-size: 26px; /* زيادة حجم الخط للعناوين */
             }
 
             .countdown {
-                font-size: 20px; /* زيادة حجم العد التنازلي */
+                font-size: 22px; /* زيادة حجم العد التنازلي */
             }
 
             #dynamic-message {
