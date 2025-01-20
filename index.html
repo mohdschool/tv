@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>البرنامج الرقمي لجدول امتحانات الفصل الأول</title>
+    <style>
+        /* إعدادات عامة */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            color: #333;
+            background: linear-gradient(-45deg, #004080, #0084ff, #00334d, #80dfff);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* النجوم المتحركة */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .stars span {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle linear infinite;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* التاريخ والساعة */
+        .datetime {
+            position: fixed;
+            top: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            z-index: 1000;
+        }
+
+        .clock, .date {
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+            padding: 10px;
+        }
+
+        .clock {
+            left: 20px;
+        }
+
+        .date {
+            right: 20px;
+        }
+
+        /* الرأس والشعار */
+        header {
+            background-color: #004080;
+            color: white;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header img {
+            width: 80px;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        header h1 {
+            margin: 10px 0 0;
+            font-size: 22px;
+        }
+
+        /* أزرار الأيام والفترات */
+        .days-buttons, .periods-buttons {
+            margin: 20px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .days-buttons button, .periods-buttons button {
+            background-color: #004080;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin: 5px;
+        }
+
+        .days-buttons button:hover, .days-buttons button.active,
+        .periods-buttons button:hover, .periods-buttons button.active {
+            background-color: #0066cc;
+            transform: scale(1.1);
+        }
+
+        .days-buttons button:after, .periods-buttons button:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .days-buttons button:active:after, .periods-buttons button:active:after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* جدول الامتحانات */
+        .content {
+            margin-top: 10px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .exam-table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 95%;
+            max-width: 1100px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .exam-table th, .exam-table td {
+            border: 2px solid #004080;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+            color: #004080;
+        }
+
+        .exam-table th {
+            background-color: #004080;
+            color: white;
+        }
+
+        .countdown {
+            font-size: 18px;
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        /* شريط التقدم */
+        .progress-container {
+            width: 90%;
+            margin: 20px auto;
+            background: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            height: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 10;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #004080;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* العبارات التحفيزية */
+        #dynamic-message {
+            position: fixed;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #004080;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            display: none;
+            animation: fadeInOut 3s linear infinite;
+            z-index: 20;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* شريط التمرير */
+        .marquee {
+            background-color: #004080;
+            color: white;
+            overflow: hidden;
+            white-space: nowrap;
+            position: fixed;
+            bottom: 50px;
+            width: 100%;
+            padding: 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .marquee p {
+            display: inline-block;
+            animation: scroll-left 15s linear infinite;
+            margin: 0;
+        }
+
+        @keyframes scroll-left {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* تحسين التجاوب */
+        @media (max-width: 768px) {
+            /* التاريخ والساعة */
+            .datetime {
+                top: 5px; /* تقليل المسافة من الأعلى */
+                font-size: 14px; /* تقليل حجم الخط */
+            }
+
+            .clock, .date {
+                padding: 5px; /* تقليل الحشو */
+            }
+
+            /* الرأس والشعار */
+            header {
+                padding: 10px; /* تقليل الحشو */
+                margin-top: 40px; /* إضافة مسافة من الأعلى لتجنب التداخل */
+            }
+
+            header img {
+                width: 60px; /* تقليل حجم الشعار */
+            }
+
+            header h1 {
+                font-size: 16px; /* تقليل حجم العنوان */
+                margin-top: 5px; /* تقليل المسافة بين الشعار والعنوان */
+            }
+
+            /* أزرار الفترات */
+            .days-buttons button, .periods-buttons button {
+                font-size: 16px;
+                padding: 8px 16px;
+            }
+
+            /* جدول الامتحانات */
+            .exam-table th, .exam-table td {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            /* العبارات التحفيزية */
+            #dynamic-message {
+                font-size: 14px;
+                bottom: 100px;
+            }
+
+            /* شريط التمرير */
+            .marquee {
+                font-size: 14px;
+                bottom: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* التاريخ والساعة */
+            .datetime {
+                top: 3px; /* تقليل المسافة من الأعلى أكثر */
+                font-size: 12px; /* تقليل حجم الخط أكثر */
+            }
+
+            .clock, .date {
+                padding: 3px; /* تقليل الحشو أكثر */
+            }
+
+            /* الرأس والشعار */
+            header {
+                padding: 8px; /* تقليل الحشو أكثر */
+                margin-top: 30px; /* إضافة مسافة من الأعلى أكثر */
+            }
+
+            header img {
+                width: 50px; /* تقليل حجم الشعار أكثر */
+            }
+
+            header h1 {
+                font-size: 14px; /* تقليل حجم العنوان أكثر */
+                margin-top: 3px; /* تقليل المسافة بين الشعار والعنوان أكثر */
+            }
+
+            /* أزرار الفترات */
+            .days-buttons button, .periods-buttons button {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+
+            /* جدول الامتحانات */
+            .exam-table th, .exam-table td {
+                font-size: 12px;
+                padding: 6px;
+            }
+
+            /* العبارات التحفيزية */
+            #dynamic-message {
+                font-size: 12px;
+                bottom: 80px;
+            }
+
+            /* شريط التمرير */
+            .marquee {
+                font-size: 12px;
+                bottom: 30px;
+            }
+        }
+
+        /* إعدادات عامة للشاشات الكبيرة */
+        @media (min-width: 1200px) {
+            body {
+                font-size: 20px; /* زيادة حجم الخط العام */
+            }
+
+            header h1 {
+                font-size: 32px; /* زيادة حجم عنوان الرأس */
+            }
+
+            .clock, .date {
+                font-size: 28px; /* زيادة حجم التاريخ والساعة */
+            }
+
+            .days-buttons button, .periods-buttons button {
+                font-size: 24px; /* زيادة حجم أزرار الأيام والفترات */
+                padding: 15px 30px; /* زيادة الحشو للأزرار */
+            }
+
+            .exam-table th, .exam-table td {
+                font-size: 22px; /* زيادة حجم خط الجدول */
+                padding: 15px; /* زيادة الحشو للخلايا */
+            }
+
+            .countdown {
+                font-size: 20px; /* زيادة حجم العد التنازلي */
+            }
+
+            #dynamic-message {
+                font-size: 24px; /* زيادة حجم العبارات التحفيزية */
+                padding: 15px 30px; /* زيادة الحشو للعبارات التحفيزية */
+            }
+
+            .marquee {
+                font-size: 20px; /* زيادة حجم الخط في شريط التمرير */
+                padding: 15px 0; /* زيادة الحشو لشريط التمرير */
+            }
+
+            .progress-container {
+                height: 25px; /* زيادة ارتفاع شريط التقدم */
+            }
+
+            .progress-bar {
+                height: 25px; /* زيادة ارتفاع شريط التقدم */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- النجوم المتحركة -->
+    <div class="stars" id="stars"></div>
+
+    <!-- التاريخ والساعة -->
+    <div class="datetime">
+        <div class="clock" id="clock"></div>
+        <div class="date" id="date"></div>
+    </div>
+
+    <!-- الرأس -->
+    <header>
+        <img src="https://e.top4top.io/p_3302it4a31.jpg" alt="شعار المدرسة">
+        <h1>جدول امتحانات الفصل الدراسي الأول</h1>
+    </header>
+
+    <!-- أزرار الأيام -->
+    <div class="days-buttons">
+        <button id="btnSunday" class="active">الأحد</button>
+        <button id="btnMonday">الإثنين</button>
+        <button id="btnTuesday">الثلاثاء</button>
+        <button id="btnWednesday">الأربعاء</button>
+    </div>
+
+    <!-- أزرار الفترات (فقط ليوم الأحد) -->
+    <div class="periods-buttons" id="periodsButtons" style="display: none;">
+        <button id="btnPeriod1" class="active">الفترة الأولى</button>
+        <button id="btnPeriod2">الفترة الثانية</button>
+    </div>
+
+    <!-- المحتوى -->
+    <div class="content">
+        <!-- الأحد -->
+        <div id="sunday">
+            <div id="period1">
+                <h2>الفترة الأولى</h2>
+                <table class="exam-table">
+                    <thead>
+                        <tr>
+                            <th>الصف</th>
+                            <th>المادة</th>
+                            <th>الوقت</th>
+                            <th>المدة</th>
+                            <th>العد التنازلي</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>الصفوف الخامس إلى الثامن</td>
+                            <td>العلوم</td>
+                            <td>8:00 ص - 9:30 ص</td>
+                            <td>ساعة ونصف</td>
+                            <td class="countdown" id="countdown1">سيبدأ العد التنازلي عند بدء الاختبار</td>
+                        </tr>
+                        <tr>
+                            <td>الصف التاسع</td>
+                            <td>الدراسات الاجتماعية</td>
+                            <td>8:00 ص - 9:30 ص</td>
+                            <td>ساعة ونصف</td>
+                            <td class="countdown" id="countdown2">سيبدأ العد التنازلي عند بدء الاختبار</td>
+                        </tr>
+                        <tr>
+                            <td>الصف العاشر</td>
+                            <td>اللغة الإنجليزية</td>
+                            <td>8:00 ص - 10:30 ص</td>
+                            <td>ساعتان ونصف</td>
+                            <td class="countdown" id="countdown3">سيبدأ العد التنازلي عند بدء الاختبار</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="period2" style="display: none;">
+                <h2>الفترة الثانية</h2>
+                <table class="exam-table">
+                    <thead>
+                        <tr>
+                            <th>الصف</th>
+                            <th>المادة</th>
+                            <th>الوقت</th>
+                            <th>المدة</th>
+                            <th>العد التنازلي</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>الصف التاسع</td>
+                            <td>اللغة الإنجليزية</td>
+                            <td>10:00 ص - 12:00 م</td>
+                            <td>ساعتان</td>
+                            <td class="countdown" id="countdown4">سيبدأ العد التنازلي عند بدء الاختبار</td>
+                        </tr>
+                        <tr>
+                            <td>الصف العاشر</td>
+                            <td>الدراسات الاجتماعية</td>
+                            <td>11:00 ص - 1:00 م</td>
+                            <td>ساعتان</td>
+                            <td class="countdown" id="countdown5">سيبدأ العد التنازلي عند بدء الاختبار</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- الإثنين -->
+        <div id="monday" style="display: none;">
+            <h2>الفترة الأولى</h2>
+            <table class="exam-table">
+                <thead>
+                    <tr>
+                        <th>الصف</th>
+                        <th>المادة</th>
+                        <th>الوقت</th>
+                        <th>المدة</th>
+                        <th>العد التنازلي</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الصفوف الخامس إلى الثامن</td>
+                        <td>الدراسات الاجتماعية</td>
+                        <td>8:00 ص - 9:30 ص</td>
+                        <td>ساعة ونصف</td>
+                        <td class="countdown" id="countdown6">سيبدأ العد التنازلي عند بدء الاختبار</td>
+                    </tr>
+                    <tr>
+                        <td>الصف التاسع</td>
+                        <td>الرياضيات</td>
+                        <td>8:00 ص - 9:30 ص</td>
+                        <td>ساعة ونصف</td>
+                        <td class="countdown" id="countdown7">سيبدأ العد التنازلي عند بدء الاختبار</td>
+                    </tr>
+                    <tr>
+                        <td>الصف العاشر</td>
+                        <td>الرياضيات</td>
+                        <td>8:00 ص - 10:30 ص</td>
+                        <td>ساعتان ونصف</td>
+                        <td class="countdown" id="countdown8">سيبدأ العد التنازلي عند بدء الاختبار</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- الثلاثاء -->
+        <div id="tuesday" style="display: none;">
+            <h2>الفترة الأولى</h2>
+            <table class="exam-table">
+                <thead>
+                    <tr>
+                        <th>الصف</th>
+                        <th>المادة</th>
+                        <th>الوقت</th>
+                        <th>المدة</th>
+                        <th>العد التنازلي</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الصفوف الخامس إلى الثامن</td>
+                        <td>اللغة العربية</td>
+                        <td>8:00 ص - 10:00 ص</td>
+                        <td>ساعتان</td>
+                        <td class="countdown" id="countdown9">سيبدأ العد التنازلي عند بدء الاختبار</td>
+                    </tr>
+                    <tr>
+                        <td>الصف التاسع</td>
+                        <td>الفيزياء</td>
+                        <td>8:00 ص - 9:30 ص</td>
+                        <td>ساعة ونصف</td>
+                        <td class="countdown" id="countdown10">سيبدأ العد التنازلي عند بدء الاختبار</td>
+                    </tr>
+                    <tr>
+                        <td>الصف العاشر</td>
+                        <td>الفيزياء</td>
+                        <td>8:00 ص - 10:00 ص</td>
+                        <td>ساعتان</td>
+                        <td class="countdown" id="countdown11">سيبدأ العد التنازلي عند بدء الاختبار</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- الأربعاء -->
+        <div id="wednesday" style="display: none;">
+            <h2>الفترة الأولى</h2>
+            <table class="exam-table">
+                <thead>
+                    <tr>
+                        <th>الصف</th>
+                        <th>المادة</th>
+                        <th>الوقت</th>
+                        <th>المدة</th>
+                        <th>العد التنازلي</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>الصف التاسع</td>
+                        <td>الأحياء</td>
+                        <td>8:00 ص - 9:30 ص</td>
+                        <td>ساعة ونصف</td>
+                        <td class="countdown" id="countdown12">سيبدأ العد التنازلي عند بدء الاختبار</td>
+                    </tr>
+                    <tr>
+                        <td>الصف العاشر</td>
+                        <td>الأحياء</td>
+                        <td>8:00 ص - 10:00 ص</td>
+                        <td>ساعتان</td>
+                        <td class="countdown" id="countdown13">سيبدأ العد التنازلي عند بدء الاختبار</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- شريط التقدم -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <!-- العبارات التحفيزية -->
+    <div id="dynamic-message">✨ بالتوفيق لجميع الطلاب! ✨</div>
+
+    <!-- شريط التمرير -->
+    <div class="marquee">
+        <p>✨ تأكد من إحضار أدواتك كاملة | احرص على قراءة التعليمات بعناية | الهدوء مفتاح النجاح! ✨</p>
+    </div>
+
+    <script>
+        // النجوم المتحركة
+        const starsContainer = document.getElementById("stars");
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement("span");
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.width = `${Math.random() * 3}px`;
+            star.style.height = star.style.width;
+            star.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            starsContainer.appendChild(star);
+        }
+
+        // تحديث التاريخ
+        function updateDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById("date").textContent = `📅 ${now.toLocaleDateString('ar-EG', options)}`;
+        }
+        updateDate();
+
+        // تحديث الساعة الرقمية
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours() % 12 || 12;
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const ampm = now.getHours() >= 12 ? 'م' : 'ص';
+            document.getElementById("clock").textContent = `⌚ ${hours}:${minutes}:${seconds} ${ampm}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // بدء العد التنازلي
+        function startCountdownWithEffect(elementId, startTime, endTime) {
+            const countdownElement = document.getElementById(elementId);
+
+            function updateCountdown() {
+                const now = new Date();
+                const start = new Date(startTime);
+                const end = new Date(endTime);
+
+                if (now < start) {
+                    const distance = start - now;
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    countdownElement.textContent = `يبدأ بعد: ${days} يوم ${hours} ساعة ${minutes} دقيقة ${seconds} ثانية`;
+                    countdownElement.style.color = "#004080";
+                    return;
+                }
+
+                if (now >= start && now <= end) {
+                    const distance = end - now;
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    countdownElement.textContent = `المتبقي: ${hours} ساعة ${minutes} دقيقة ${seconds} ثانية`;
+                    countdownElement.style.color = "#FF0000";
+                    return;
+                }
+
+                if (now > end) {
+                    countdownElement.textContent = "انتهى الامتحان";
+                    countdownElement.style.color = "red";
+                    clearInterval(interval);
+                }
+            }
+
+            const interval = setInterval(updateCountdown, 1000);
+            updateCountdown();
+        }
+
+        // أوقات الامتحانات
+        const examTimes = [
+            { id: "countdown1", start: "2025-01-19T08:00:00", end: "2025-01-19T09:30:00" },
+            { id: "countdown2", start: "2025-01-19T08:00:00", end: "2025-01-19T09:30:00" },
+            { id: "countdown3", start: "2025-01-19T08:00:00", end: "2025-01-19T10:30:00" },
+            { id: "countdown4", start: "2025-01-19T10:00:00", end: "2025-01-19T12:00:00" },
+            { id: "countdown5", start: "2025-01-19T11:00:00", end: "2025-01-19T1:00:00" },
+            { id: "countdown6", start: "2025-01-20T08:00:00", end: "2025-01-20T09:30:00" },
+            { id: "countdown7", start: "2025-01-20T08:00:00", end: "2025-01-20T09:30:00" },
+            { id: "countdown8", start: "2025-01-20T08:00:00", end: "2025-01-20T10:30:00" },
+            { id: "countdown9", start: "2025-01-21T08:00:00", end: "2025-01-21T10:00:00" },
+            { id: "countdown10", start: "2025-01-21T08:00:00", end: "2025-01-21T09:30:00" },
+            { id: "countdown11", start: "2025-01-21T08:00:00", end: "2025-01-21T10:00:00" },
+            { id: "countdown12", start: "2025-01-22T08:00:00", end: "2025-01-22T09:30:00" },
+            { id: "countdown13", start: "2025-01-22T08:00:00", end: "2025-01-22T10:00:00" }
+        ];
+
+        examTimes.forEach(({ id, start, end }) => {
+            startCountdownWithEffect(id, start, end);
+        });
+
+        // التبديل بين الأيام
+        const daysButtons = document.querySelectorAll('.days-buttons button');
+        const daysContent = document.querySelectorAll('.content > div');
+        const periodsButtons = document.getElementById("periodsButtons");
+
+        daysButtons.forEach((button, index) => {
+            button.addEventListener("click", () => {
+                daysContent.forEach(content => content.style.display = "none");
+                daysContent[index].style.display = "block";
+                daysButtons.forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+
+                // إظهار أزرار الفترات فقط ليوم الأحد
+                if (button.id === "btnSunday") {
+                    periodsButtons.style.display = "block";
+                } else {
+                    periodsButtons.style.display = "none";
+                }
+            });
+        });
+
+        // التبديل بين الفترات (فقط ليوم الأحد)
+        const btnPeriod1 = document.getElementById("btnPeriod1");
+        const btnPeriod2 = document.getElementById("btnPeriod2");
+        const periodsContent = document.querySelectorAll('#sunday > div');
+
+        btnPeriod1.addEventListener("click", () => {
+            periodsContent.forEach(content => content.style.display = "none");
+            document.querySelector('#sunday > #period1').style.display = "block";
+            btnPeriod1.classList.add("active");
+            btnPeriod2.classList.remove("active");
+        });
+
+        btnPeriod2.addEventListener("click", () => {
+            periodsContent.forEach(content => content.style.display = "none");
+            document.querySelector('#sunday > #period2').style.display = "block";
+            btnPeriod2.classList.add("active");
+            btnPeriod1.classList.remove("active");
+        });
+
+        // العبارات التحفيزية
+        const motivationalMessages = [
+            "✨ ركز جيدًا لتحقيق النجاح!",
+            "📖 احرص على قراءة التعليمات بعناية!",
+            "🌟 استعد لتقديم أفضل ما لديك!",
+            "💪 التفوق يبدأ من هنا!"
+        ];
+        let messageIndex = 0;
+
+        function showDynamicMessage() {
+            const dynamicMessage = document.getElementById("dynamic-message");
+            dynamicMessage.textContent = motivationalMessages[messageIndex];
+            dynamicMessage.style.display = "block";
+
+            setTimeout(() => {
+                dynamicMessage.style.display = "none";
+            }, 5000);
+
+            messageIndex = (messageIndex + 1) % motivationalMessages.length;
+        }
+
+        setInterval(showDynamicMessage, 10000);
+
+        // شريط التقدم
+        const progressBar = document.getElementById("progress-bar");
+        let progress = 0;
+
+        setInterval(() => {
+            progress = (progress + 1) % 100;
+            progressBar.style.width = `${progress}%`;
+        }, 100);
+    </script>
+</body>
+</html>
