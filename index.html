@@ -3,468 +3,319 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>البرنامج الرقمي لجدول امتحانات الفصل الأول</title>
+    <title>نظام إدارة بيانات الحافلات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* إعدادات عامة */
+        /* التنسيق العام */
         body {
             font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ffe0b3, #ffcc80);
+            color: #333;
             margin: 0;
             padding: 0;
             text-align: center;
-            color: #333;
-            background: linear-gradient(-45deg, #004080, #0084ff, #00334d, #80dfff);
-            background-size: 400% 400%;
-            animation: gradientBG 10s ease infinite;
-            overflow: hidden;
-            position: relative;
-            min-height: 100vh; /* لجعل body يأخذ ارتفاع الشاشة بالكامل */
+            animation: gradientAnimation 10s infinite alternate;
         }
 
-        @keyframes gradientBG {
+        @keyframes gradientAnimation {
             0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
 
-        /* النجوم المتحركة */
-        .stars {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
-
-        .stars span {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle linear infinite;
-        }
-
-        @keyframes twinkle {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-        /* التاريخ والساعة */
-        .datetime {
-            position: fixed;
-            top: 10px;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            z-index: 1000;
-        }
-
-        .clock, .date {
-            font-size: 45px; /* زيادة حجم الخط */
-            color: white;
-            font-weight: bold;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-            padding: 10px;
-        }
-
-        .clock {
-            left: 20px;
-        }
-
-        .date {
-            right: 20px;
-        }
-
-        /* الرأس والشعار */
+        /* الرأس */
         header {
-            background-color: #004080;
+            background: linear-gradient(135deg, #ffa726, #fb8c00);
             color: white;
             padding: 20px;
-            position: relative;
-            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
+        /* الشعار الدائري والمضيء */
         header img {
-            width: 80px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
-            animation: pulse 2s infinite;
+            border: 4px solid white;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 40px rgba(255, 255, 255, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: float 3s infinite ease-in-out;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+        header img:hover {
+            transform: rotate(360deg);
+            box-shadow: 0 0 30px rgba(255, 167, 38, 0.7);
         }
 
-        header h1 {
-            margin: 10px 0 0;
-            font-size: 40px; /* زيادة حجم العنوان */
-            font-weight: bold; /* جعل العنوان غامقًا */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        /* أزرار الأيام والفترات */
-        .days-buttons, .periods-buttons {
-            margin: 20px 0;
-            position: relative;
-            z-index: 10;
+        /* العنوان */
+        h1 {
+            margin: 15px 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            animation: textShadow 3s infinite alternate;
         }
 
-        .days-buttons button, .periods-buttons button {
-            background-color: #004080;
+        @keyframes textShadow {
+            0% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); }
+            100% { text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4); }
+        }
+
+        /* الساعة الرقمية */
+        #clock {
+            font-size: 1.5em;
+            margin: 10px 0;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* النموذج */
+        form {
+            background: white;
+            padding: 25px;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* حقول الإدخال */
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #fb8c00;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: #fb8c00;
+            box-shadow: 0 0 8px rgba(251, 140, 0, 0.5);
+            outline: none;
+        }
+
+        /* زر الإرسال */
+        button {
+            background: linear-gradient(135deg, #ffa726, #fb8c00);
             color: white;
+            padding: 12px 25px;
             border: none;
-            padding: 20px 40px; /* زيادة الحشو */
-            font-size: 28px; /* زيادة حجم الخط */
-            font-weight: bold; /* جعل الخط غامقًا */
-            border-radius: 5px;
+            border-radius: 8px;
+            font-size: 1em;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            transition: background 0.3s ease, transform 0.3s ease;
             position: relative;
             overflow: hidden;
-            margin: 5px;
         }
 
-        .days-buttons button:hover, .days-buttons button.active,
-        .periods-buttons button:hover, .periods-buttons button.active {
-            background-color: #0066cc;
-            transform: scale(1.1);
+        button:hover {
+            background: linear-gradient(135deg, #fb8c00, #ffa726);
+            transform: translateY(-2px);
         }
 
-        .days-buttons button:after, .periods-buttons button:after {
+        button:after {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 300%;
-            height: 300%;
-            background: rgba(255, 255, 255, 0.3);
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
             border-radius: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.5s ease;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
         }
 
-        .days-buttons button:active:after, .periods-buttons button:active:after {
-            transform: translate(-50%, -50%) scale(1);
+        button:focus:after {
+            animation: ripple 0.5s ease-out;
         }
 
-        /* جدول الامتحانات */
-        .content {
-            margin-top: 10px;
-            padding-bottom: 20px; /* زيادة الهامش السفلي */
-            position: relative;
-            z-index: 10;
+        @keyframes ripple {
+            0% { transform: scale(0, 0); opacity: 1; }
+            100% { transform: scale(50, 50); opacity: 0; }
         }
 
-        .exam-table {
-            margin: 20px auto;
-            border-collapse: collapse;
-            width: 95%;
-            max-width: 1200px; /* زيادة عرض الجدول */
-            background-color: #002244; /* خلفية غامقة */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .exam-table th, .exam-table td {
-            border: 2px solid #004080;
-            padding: 25px; /* زيادة الحشو */
-            text-align: center;
-            font-size: 32px; /* زيادة حجم الخط */
-            font-weight: bold; /* جعل الخط غامقًا */
-            color: white; /* لون الخط أبيض */
-        }
-
-        .exam-table th {
-            background-color: #004080;
+        /* التذييل */
+        footer {
+            margin-top: 30px;
+            padding: 15px;
+            background: #333;
             color: white;
-            font-size: 36px; /* زيادة حجم الخط للعناوين */
+            font-size: 0.9em;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .countdown {
-            font-size: 28px; /* زيادة حجم العد التنازلي */
-            color: white; /* تغيير لون العد التنازلي إلى الأبيض */
-            font-weight: bold;
+        /* تأثيرات الظلام (Dark Mode) */
+        .dark-mode {
+            background: #333;
+            color: #fff;
         }
 
-        /* تحسين التجاوب */
-        @media (max-width: 768px) {
-            /* التاريخ والساعة */
-            .datetime {
-                top: 5px;
-                font-size: 14px;
-            }
-
-            .clock, .date {
-                padding: 5px;
-            }
-
-            /* الرأس والشعار */
-            header {
-                padding: 10px;
-                margin-top: 40px;
-            }
-
-            header img {
-                width: 60px;
-            }
-
-            header h1 {
-                font-size: 16px;
-                margin-top: 5px;
-            }
-
-            /* أزرار الفترات */
-            .days-buttons button, .periods-buttons button {
-                font-size: 16px;
-                padding: 8px 16px;
-            }
-
-            /* جدول الامتحانات */
-            .exam-table th, .exam-table td {
-                font-size: 14px;
-                padding: 8px;
-            }
+        .dark-mode header {
+            background: #222;
         }
 
-        @media (max-width: 480px) {
-            /* التاريخ والساعة */
-            .datetime {
-                top: 3px;
-                font-size: 12px;
-            }
+        .dark-mode form {
+            background: #444;
+        }
 
-            .clock, .date {
-                padding: 3px;
-            }
+        /* حركة الحافلة */
+        .bus-animation {
+            width: 100px;
+            height: 50px;
+            background: url('bus.png') no-repeat;
+            position: absolute;
+            bottom: 0;
+            left: -100px;
+            animation: moveBus 10s linear infinite;
+        }
 
-            /* الرأس والشعار */
-            header {
-                padding: 8px;
-                margin-top: 30px;
-            }
+        @keyframes moveBus {
+            0% { left: -100px; }
+            100% { left: 100%; }
+        }
 
-            header img {
-                width: 50px;
-            }
-
-            header h1 {
-                font-size: 14px;
-                margin-top: 3px;
-            }
-
-            /* أزرار الفترات */
-            .days-buttons button, .periods-buttons button {
-                font-size: 14px;
-                padding: 6px 12px;
-            }
-
-            /* جدول الامتحانات */
-            .exam-table th, .exam-table td {
-                font-size: 12px;
-                padding: 6px;
-            }
+        /* شريط التقدم */
+        #progressBar {
+            width: 0%;
+            height: 5px;
+            background: #fb8c00;
+            transition: width 0.5s ease;
         }
     </style>
 </head>
 <body>
-    <!-- النجوم المتحركة -->
-    <div class="stars" id="stars"></div>
-
-    <!-- التاريخ والساعة -->
-    <div class="datetime">
-        <div class="clock" id="clock"></div>
-        <div class="date" id="date"></div>
-    </div>
-
-    <!-- الرأس -->
     <header>
         <img src="https://e.top4top.io/p_3302it4a31.jpg" alt="شعار المدرسة">
-        <h1>جدول امتحانات الفصل الدراسي الأول</h1>
+        <h1 id="typing-effect"></h1>
+        <div id="clock">جارٍ التحميل...</div>
     </header>
 
-    <!-- أزرار الأيام -->
-    <div class="days-buttons">
-        <button id="btnTuesday" class="active">الثلاثاء</button>
-        <button id="btnWednesday">الأربعاء</button>
-    </div>
+    <form id="busForm">
+        <label for="busNumber"><i class="fas fa-bus"></i> رقم الحافلة:</label>
+        <input type="text" id="busNumber" name="busNumber" required>
 
-    <!-- المحتوى -->
-    <div class="content">
-        <!-- الثلاثاء -->
-        <div id="tuesday">
-            <table class="exam-table">
-                <thead>
-                    <tr>
-                        <th>الصف</th>
-                        <th>المادة</th>
-                        <th>الوقت</th>
-                        <th>المدة</th>
-                        <th>العد التنازلي</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>الصفوف الخامس إلى الثامن</td>
-                        <td>اللغة العربية</td>
-                        <td>8:00 ص - 10:00 ص</td>
-                        <td>ساعتان</td>
-                        <td class="countdown" id="countdown9">سيبدأ العد التنازلي عند بدء الاختبار</td>
-                    </tr>
-                    <tr>
-                        <td>الصف التاسع</td>
-                        <td>الفيزياء</td>
-                        <td>8:00 ص - 9:30 ص</td>
-                        <td>ساعة ونصف</td>
-                        <td class="countdown" id="countdown10">سيبدأ العد التنازلي عند بدء الاختبار</td>
-                    </tr>
-                    <tr>
-                        <td>الصف العاشر</td>
-                        <td>الفيزياء</td>
-                        <td>8:00 ص - 10:00 ص</td>
-                        <td>ساعتان</td>
-                        <td class="countdown" id="countdown11">سيبدأ العد التنازلي عند بدء الاختبار</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <label for="phoneNumber"><i class="fas fa-phone"></i> رقم الهاتف:</label>
+        <input type="text" id="phoneNumber" name="phoneNumber" required>
 
-        <!-- الأربعاء -->
-        <div id="wednesday" style="display: none;">
-            <table class="exam-table">
-                <thead>
-                    <tr>
-                        <th>الصف</th>
-                        <th>المادة</th>
-                        <th>الوقت</th>
-                        <th>المدة</th>
-                        <th>العد التنازلي</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>الصف التاسع</td>
-                        <td>الأحياء</td>
-                        <td>8:00 ص - 9:30 ص</td>
-                        <td>ساعة ونصف</td>
-                        <td class="countdown" id="countdown12">سيبدأ العد التنازلي عند بدء الاختبار</td>
-                    </tr>
-                    <tr>
-                        <td>الصف العاشر</td>
-                        <td>الأحياء</td>
-                        <td>8:00 ص - 10:00 ص</td>
-                        <td>ساعتان</td>
-                        <td class="countdown" id="countdown13">سيبدأ العد التنازلي عند بدء الاختبار</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+        <label for="location"><i class="fas fa-map-marker-alt"></i> الموقع المخصص لنقل الطلبة:</label>
+        <input type="text" id="location" name="location" required>
+
+        <label for="busType"><i class="fas fa-bus"></i> نوع الحافلة:</label>
+        <select id="busType" name="busType" required>
+            <option value="صغيرة">صغيرة</option>
+            <option value="متوسطة">متوسطة</option>
+            <option value="كبيرة">كبيرة</option>
+        </select>
+
+        <label for="studentCount"><i class="fas fa-users"></i> عدد الطلبة الذين يقلهم:</label>
+        <input type="number" id="studentCount" name="studentCount" required>
+
+        <label for="tripCount"><i class="fas fa-road"></i> عدد النقلات:</label>
+        <input type="number" id="tripCount" name="tripCount" required>
+
+        <button type="submit"><i class="fas fa-paper-plane"></i> إرسال البيانات</button>
+    </form>
+
+    <div id="progressBar"></div>
+
+    <footer>
+        تم تطويره بواسطة فريق المدرسة | جميع الحقوق محفوظة &copy; 2023
+    </footer>
+
+    <div class="bus-animation"></div>
+
+    <audio id="clickSound" src="click.mp3"></audio>
+
+    <button id="darkModeToggle">تفعيل الوضع المظلم</button>
 
     <script>
-        // النجوم المتحركة
-        const starsContainer = document.getElementById("stars");
-        for (let i = 0; i < 100; i++) {
-            const star = document.createElement("span");
-            star.style.top = `${Math.random() * 100}%`;
-            star.style.left = `${Math.random() * 100}%`;
-            star.style.width = `${Math.random() * 3}px`;
-            star.style.height = star.style.width;
-            star.style.animationDuration = `${Math.random() * 3 + 2}s`;
-            starsContainer.appendChild(star);
-        }
-
-        // تحديث التاريخ
-        function updateDate() {
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById("date").textContent = `📅 ${now.toLocaleDateString('ar-EG', options)}`;
-        }
-        updateDate();
-
-        // تحديث الساعة الرقمية
+        // الساعة الرقمية والتاريخ
         function updateClock() {
             const now = new Date();
-            const hours = now.getHours() % 12 || 12;
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const ampm = now.getHours() >= 12 ? 'م' : 'ص';
-            document.getElementById("clock").textContent = `⌚ ${hours}:${minutes}:${seconds} ${ampm}`;
+            const date = now.toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const time = now.toLocaleTimeString('ar-EG');
+            document.getElementById('clock').innerHTML = `${date} <br> ${time}`;
         }
         setInterval(updateClock, 1000);
         updateClock();
 
-        // بدء العد التنازلي
-        function startCountdownWithEffect(elementId, startTime, endTime) {
-            const countdownElement = document.getElementById(elementId);
-
-            function updateCountdown() {
-                const now = new Date();
-                const start = new Date(startTime);
-                const end = new Date(endTime);
-
-                if (now < start) {
-                    const distance = start - now;
-                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                    countdownElement.textContent = `يبدأ بعد: ${days} يوم ${hours} ساعة ${minutes} دقيقة ${seconds} ثانية`;
-                    countdownElement.style.color = "white"; /* لون العد التنازلي أبيض */
-                    return;
-                }
-
-                if (now >= start && now <= end) {
-                    const distance = end - now;
-                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                    countdownElement.textContent = `المتبقي: ${hours} ساعة ${minutes} دقيقة ${seconds} ثانية`;
-                    countdownElement.style.color = "white"; /* لون العد التنازلي أبيض */
-                    return;
-                }
-
-                if (now > end) {
-                    countdownElement.textContent = "انتهى الامتحان";
-                    countdownElement.style.color = "white"; /* لون العد التنازلي أبيض */
-                    clearInterval(interval);
-                }
+        // تأثير الكتابة
+        const text = "نظام إدارة بيانات الحافلات";
+        let index = 0;
+        function typeWriter() {
+            if (index < text.length) {
+                document.getElementById("typing-effect").innerHTML += text.charAt(index);
+                index++;
+                setTimeout(typeWriter, 100);
             }
-
-            const interval = setInterval(updateCountdown, 1000);
-            updateCountdown();
         }
+        typeWriter();
 
-        // أوقات الامتحانات
-        const examTimes = [
-            { id: "countdown9", start: "2025-01-21T08:00:00", end: "2025-01-21T10:00:00" },
-            { id: "countdown10", start: "2025-01-21T08:00:00", end: "2025-01-21T09:30:00" },
-            { id: "countdown11", start: "2025-01-21T08:00:00", end: "2025-01-21T10:00:00" },
-            { id: "countdown12", start: "2025-01-22T08:00:00", end: "2025-01-22T09:30:00" },
-            { id: "countdown13", start: "2025-01-22T08:00:00", end: "2025-01-22T10:00:00" }
-        ];
+        // إرسال البيانات إلى Google Sheets
+        document.getElementById('busForm').addEventListener('submit', function(event) {
+            event.preventDefault();
 
-        examTimes.forEach(({ id, start, end }) => {
-            startCountdownWithEffect(id, start, end);
+            const data = {
+                busNumber: document.getElementById('busNumber').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                location: document.getElementById('location').value,
+                busType: document.getElementById('busType').value,
+                studentCount: document.getElementById('studentCount').value,
+                tripCount: document.getElementById('tripCount').value
+            };
+
+            // عرض شريط التقدم
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                } else {
+                    width++;
+                    document.getElementById('progressBar').style.width = width + '%';
+                }
+            }, 20);
+
+            fetch('https://script.google.com/macros/s/AKfycbxFVuKPtri4R6nG9sykzjZ157cWQSlOt0DUG283DFDzYH-C3-XnPhtU3uJK4dlPWb_F/exec', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.text())
+            .then(message => {
+                alert(message);
+                document.getElementById('busForm').reset();
+                document.getElementById('progressBar').style.width = '0%';
+                document.getElementById('clickSound').play();
+            })
+            .catch(error => console.error('Error:', error));
         });
 
-        // التبديل بين الأيام
-        const daysButtons = document.querySelectorAll('.days-buttons button');
-        const daysContent = document.querySelectorAll('.content > div');
-
-        daysButtons.forEach((button, index) => {
-            button.addEventListener("click", () => {
-                daysContent.forEach(content => content.style.display = "none");
-                daysContent[index].style.display = "block";
-                daysButtons.forEach(btn => btn.classList.remove("active"));
-                button.classList.add("active");
-            });
+        // تفعيل الوضع المظلم
+        document.getElementById('darkModeToggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
         });
     </script>
 </body>
