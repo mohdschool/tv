@@ -28,6 +28,25 @@
             color: white;
             padding: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        /* زر الوضع المظلم */
+        #darkModeToggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #darkModeToggle:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
         /* الشعار الدائري والمضيء */
@@ -165,6 +184,15 @@
             box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
         }
 
+        footer a {
+            color: #ffa726;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
         /* تأثيرات الظلام (Dark Mode) */
         .dark-mode {
             background: #333;
@@ -177,46 +205,41 @@
 
         .dark-mode form {
             background: #444;
+            color: #fff;
         }
 
-        /* حركة الحافلة */
-        .bus-animation {
-            width: 100px;
-            height: 50px;
-            background: url('bus.png') no-repeat;
-            position: absolute;
-            bottom: 0;
-            left: -100px;
-            animation: moveBus 10s linear infinite;
+        .dark-mode input, .dark-mode select {
+            background: #555;
+            color: #fff;
+            border-color: #777;
         }
 
-        @keyframes moveBus {
-            0% { left: -100px; }
-            100% { left: 100%; }
+        .dark-mode input:focus, .dark-mode select:focus {
+            border-color: #ffa726;
+            box-shadow: 0 0 8px rgba(255, 167, 38, 0.5);
         }
 
-        /* شريط التقدم */
-        #progressBar {
-            width: 0%;
-            height: 5px;
-            background: #fb8c00;
-            transition: width 0.5s ease;
+        .dark-mode button {
+            background: linear-gradient(135deg, #fb8c00, #ffa726);
+        }
+
+        .dark-mode footer {
+            background: #222;
         }
     </style>
 </head>
 <body>
     <header>
+        <button id="darkModeToggle"><i class="fas fa-moon"></i> الوضع المظلم</button>
         <img src="https://e.top4top.io/p_3302it4a31.jpg" alt="شعار المدرسة">
         <h1 id="typing-effect"></h1>
         <div id="clock">جارٍ التحميل...</div>
     </header>
 
     <form id="busForm">
-        <!-- حقل اسم السائق -->
         <label for="driverName"><i class="fas fa-user"></i> اسم السائق:</label>
         <input type="text" id="driverName" name="driverName" required>
 
-        <!-- باقي الحقول -->
         <label for="busNumber"><i class="fas fa-bus"></i> رقم الحافلة:</label>
         <input type="text" id="busNumber" name="busNumber" required>
 
@@ -242,17 +265,9 @@
         <button type="submit"><i class="fas fa-paper-plane"></i> إرسال البيانات</button>
     </form>
 
-    <div id="progressBar"></div>
-
     <footer>
-        تم تطويره بواسطة فريق المدرسة | جميع الحقوق محفوظة &copy; 2023
+        تم تطويره بواسطة <a href="#" target="_blank">فريق المدرسة</a> | جميع الحقوق محفوظة &copy; 2023
     </footer>
-
-    <div class="bus-animation"></div>
-
-    <audio id="clickSound" src="click.mp3"></audio>
-
-    <button id="darkModeToggle">تفعيل الوضع المظلم</button>
 
     <script>
         // الساعة الرقمية والتاريخ
@@ -282,7 +297,7 @@
             event.preventDefault();
 
             const data = {
-                driverName: document.getElementById('driverName').value, // اسم السائق
+                driverName: document.getElementById('driverName').value,
                 busNumber: document.getElementById('busNumber').value,
                 phoneNumber: document.getElementById('phoneNumber').value,
                 location: document.getElementById('location').value,
@@ -291,18 +306,7 @@
                 tripCount: document.getElementById('tripCount').value
             };
 
-            // عرض شريط التقدم
-            let width = 0;
-            const interval = setInterval(() => {
-                if (width >= 100) {
-                    clearInterval(interval);
-                } else {
-                    width++;
-                    document.getElementById('progressBar').style.width = width + '%';
-                }
-            }, 20);
-
-            fetch('https://script.google.com/macros/s/AKfycbyNbV4TxJNkIZpKfuV95IormPxG5AFT74j5g_Gvh7FWNt1gDYUoWXfWxf1-XskTmWaG/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbwhdkiE0xBcaKEFveVrtZ8emIAbcrzhcA3NSjXvh2ucWyEIXnmQQMFGkF1Ipkq-iiV7/exec', {
                 method: 'POST',
                 body: JSON.stringify(data),
                 headers: {
@@ -312,9 +316,7 @@
             .then(response => response.text())
             .then(message => {
                 alert(message);
-                document.getElementById('busForm').reset();
-                document.getElementById('progressBar').style.width = '0%';
-                document.getElementById('clickSound').play();
+                document.getElementById('busForm').reset(); // إعادة تعيين النموذج بعد الإرسال
             })
             .catch(error => console.error('Error:', error));
         });
