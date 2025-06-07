@@ -4,8 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة الشهادات - رويدًا أيها الطامحون</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #4a6491;
+            --accent-color: #e74c3c;
+            --light-color: #f5f7fa;
+        }
         
         body {
             font-family: 'Tajawal', sans-serif;
@@ -16,18 +24,18 @@
             align-items: center;
             min-height: 100vh;
             color: #333;
-            overflow: hidden;
-            position: relative;
+            background: #f5f5f5;
+            overflow-y: auto;
         }
         
         /* الخلفية المتحركة */
         .bg-animation {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: -2;
             background: linear-gradient(-45deg, #f5f7fa, #e4e8f0, #f0f4ff, #e8f0ff);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -42,77 +50,92 @@
         .certificate-container {
             width: 90%;
             max-width: 800px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
             overflow: hidden;
             position: relative;
-            border: 1px solid rgba(224, 224, 224, 0.5);
-            transition: transform 0.3s ease;
-            backdrop-filter: blur(5px);
+            border: 1px solid rgba(224, 224, 224, 0.7);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            margin: 50px auto;
         }
         
         .certificate-container:hover {
             transform: translateY(-10px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25), 
+                        0 0 50px rgba(74, 100, 145, 0.1);
         }
         
         .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
             padding: 30px;
             text-align: center;
             position: relative;
             overflow: hidden;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
         }
         
         .header::before {
             content: "";
             position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
             z-index: 0;
+            animation: rotateGradient 20s linear infinite;
+        }
+        
+        @keyframes rotateGradient {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         .school-logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 15px;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
-            animation: glow 2s infinite alternate;
+            border: 4px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.8),
+                        inset 0 0 20px rgba(255, 255, 255, 0.4);
+            animation: pulseGlow 3s infinite alternate;
             display: block;
+            position: relative;
+            z-index: 2;
         }
         
-        @keyframes glow {
-            from {
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 30px rgba(255, 255, 255, 0.6),
+                            inset 0 0 15px rgba(255, 255, 255, 0.3);
             }
-            to {
-                box-shadow: 0 0 30px rgba(255, 255, 255, 0.9);
+            100% {
+                box-shadow: 0 0 50px rgba(255, 255, 255, 0.9),
+                            inset 0 0 25px rgba(255, 255, 255, 0.5);
             }
         }
         
         .header h1 {
-            margin: 15px 0 0;
-            font-size: 2.2rem;
+            margin: 20px 0 0;
+            font-size: 2.5rem;
             font-weight: 700;
             position: relative;
-            z-index: 1;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            z-index: 2;
+            text-shadow: 0 3px 6px rgba(0,0,0,0.3);
         }
         
         .header p {
             margin: 10px 0 0;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             opacity: 0.9;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
         
         .content {
@@ -126,14 +149,14 @@
             text-align: center;
             margin-bottom: 30px;
             position: relative;
-            padding: 20px;
-            border-radius: 10px;
-            background: rgba(249, 249, 249, 0.7);
-            border-left: 5px solid #4a6491;
+            padding: 30px;
+            border-radius: 15px;
+            background: rgba(249, 249, 249, 0.8);
+            border-left: 5px solid var(--secondary-color);
         }
         
         .highlight {
-            color: #4a6491;
+            color: var(--secondary-color);
             font-weight: 700;
         }
         
@@ -161,8 +184,8 @@
             display: flex;
             justify-content: center;
             margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px dashed #ddd;
+            padding-top: 30px;
+            border-top: 1px dashed rgba(221, 221, 221, 0.7);
         }
         
         .signature-item {
@@ -171,44 +194,68 @@
         
         .signature-name {
             font-weight: 700;
-            margin-top: 10px;
-            color: #4a6491;
+            margin-top: 15px;
+            color: var(--secondary-color);
+        }
+        
+        .button-container {
+            text-align: center;
+            margin-top: 40px;
         }
         
         .back-button {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #4a6491 0%, #2c3e50 100%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
             color: white;
             text-decoration: none;
             border-radius: 50px;
             font-weight: 700;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.2);
+            box-shadow: 0 10px 20px rgba(44, 62, 80, 0.2);
             border: none;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
         
         .back-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 7px 20px rgba(44, 62, 80, 0.3);
-            background: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(44, 62, 80, 0.3);
+        }
+        
+        .back-button i {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .back-button:hover i {
+            transform: translateX(5px);
         }
         
         .patience-message {
-            background: linear-gradient(135deg, rgba(255, 248, 225, 0.7) 0%, rgba(255, 236, 179, 0.7) 100%);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 30px;
+            background: linear-gradient(135deg, rgba(255, 248, 225, 0.8) 0%, rgba(255, 236, 179, 0.8) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 40px;
             text-align: center;
             font-weight: 500;
-            border: 1px solid #ffe082;
+            border: 1px solid rgba(255, 224, 130, 0.7);
         }
         
-        .floating-leaves {
-            position: absolute;
+        .footer {
+            background: rgba(245, 245, 245, 0.8);
+            padding: 25px;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #666;
+            border-top: 1px solid rgba(221, 221, 221, 0.5);
+        }
+        
+        /* العناصر الطافية */
+        .floating-elements {
+            position: fixed;
             width: 100%;
             height: 100%;
             top: 0;
@@ -217,39 +264,46 @@
             z-index: -1;
         }
         
-        .leaf {
+        .floating-element {
             position: absolute;
-            background-size: contain;
-            background-repeat: no-repeat;
-            opacity: 0.6;
-            animation: float 10s infinite linear;
+            opacity: 0;
+            animation: floatElement 15s infinite linear;
         }
         
-        @keyframes float {
+        @keyframes floatElement {
             0% {
-                transform: translateY(0) rotate(0deg);
+                transform: translateY(100vh) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
             }
             100% {
-                transform: translateY(-100vh) rotate(360deg);
+                transform: translateY(-100px) rotate(360deg) scale(1);
+                opacity: 0;
             }
         }
         
         @media (max-width: 768px) {
             .header h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
             
             .school-logo {
-                width: 80px;
-                height: 80px;
+                width: 100px;
+                height: 100px;
             }
             
             .message {
                 font-size: 1.1rem;
+                padding: 20px;
             }
             
             .content {
-                padding: 25px;
+                padding: 30px;
             }
         }
     </style>
@@ -257,8 +311,8 @@
 <body>
     <div class="bg-animation"></div>
     
-    <!-- الأوراق الطافية -->
-    <div class="floating-leaves" id="leaves-container"></div>
+    <!-- العناصر الطافية -->
+    <div class="floating-elements" id="elements-container"></div>
     
     <div class="certificate-container">
         <div class="header">
@@ -293,8 +347,10 @@
                 </div>
             </div>
             
-            <div style="text-align: center;">
-                <a href="https://mohdschool.github.io/certificate/" class="back-button">العودة إلى المنصة</a>
+            <div class="button-container">
+                <a href="https://mohdschool.github.io/certificate/" class="back-button">
+                    العودة إلى المنصة <i class="fas fa-arrow-left"></i>
+                </a>
             </div>
         </div>
         
@@ -304,32 +360,29 @@
     </div>
     
     <script>
-        // إنشاء الأوراق الطافية
+        // إنشاء العناصر الطافية
         document.addEventListener('DOMContentLoaded', function() {
-            const leavesContainer = document.getElementById('leaves-container');
-            const leafTypes = ['🍂', '🍁', '🌿', '🍀'];
+            const elementsContainer = document.getElementById('elements-container');
+            const elementTypes = ['✏️', '📝', '📄', '🏆', '📜', '✒️', '🎓'];
             
-            for (let i = 0; i < 15; i++) {
-                const leaf = document.createElement('div');
-                leaf.className = 'leaf';
-                leaf.innerHTML = leafTypes[Math.floor(Math.random() * leafTypes.length)];
+            for (let i = 0; i < 12; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.innerHTML = elementTypes[Math.floor(Math.random() * elementTypes.length)];
                 
-                // خصائص عشوائية لكل ورقة
                 const size = Math.random() * 30 + 20;
                 const left = Math.random() * 100;
-                const animationDuration = Math.random() * 15 + 10;
-                const delay = Math.random() * 10;
-                const opacity = Math.random() * 0.5 + 0.3;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 25 + 15;
                 
-                leaf.style.fontSize = `${size}px`;
-                leaf.style.left = `${left}%`;
-                leaf.style.top = `${Math.random() * 100 + 100}%`;
-                leaf.style.animationDuration = `${animationDuration}s`;
-                leaf.style.animationDelay = `${delay}s`;
-                leaf.style.opacity = opacity;
-                leaf.style.transform = `rotate(${Math.random() * 360}deg)`;
+                element.style.fontSize = `${size}px`;
+                element.style.left = `${left}%`;
+                element.style.top = `${Math.random() * 100 + 100}%`;
+                element.style.animationDelay = `${delay}s`;
+                element.style.animationDuration = `${duration}s`;
+                element.style.opacity = Math.random() * 0.5 + 0.3;
                 
-                leavesContainer.appendChild(leaf);
+                elementsContainer.appendChild(element);
             }
         });
     </script>
