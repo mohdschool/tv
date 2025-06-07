@@ -3,327 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة بيانات الحافلات</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>منصة الشهادات - رويدًا أيها الطامحون</title>
     <style>
-        /* التنسيق العام */
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #ffe0b3, #ffcc80);
-            color: #333;
+            font-family: 'Tajawal', sans-serif;
             margin: 0;
             padding: 0;
-            text-align: center;
-            animation: gradientAnimation 10s infinite alternate;
-        }
-
-        @keyframes gradientAnimation {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-        }
-
-        /* الرأس */
-        header {
-            background: linear-gradient(135deg, #ffa726, #fb8c00);
-            color: white;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+            overflow: hidden;
             position: relative;
         }
-
-        /* زر الوضع المظلم */
-        #darkModeToggle {
+        
+        /* الخلفية المتحركة */
+        .bg-animation {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        #darkModeToggle:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        /* الشعار الدائري والمضيء */
-        header img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 4px solid white;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 40px rgba(255, 255, 255, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: float 3s infinite ease-in-out;
-        }
-
-        header img:hover {
-            transform: rotate(360deg);
-            box-shadow: 0 0 30px rgba(255, 167, 38, 0.7);
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        /* العنوان */
-        h1 {
-            margin: 15px 0;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            animation: textShadow 3s infinite alternate;
-        }
-
-        @keyframes textShadow {
-            0% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); }
-            100% { text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4); }
-        }
-
-        /* الساعة الرقمية */
-        #clock {
-            font-size: 1.5em;
-            margin: 10px 0;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        /* النموذج */
-        form {
-            background: white;
-            padding: 25px;
-            margin: 20px auto;
-            width: 90%;
-            max-width: 500px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        form:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        /* حقول الإدخال */
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            font-weight: bold;
-            color: #fb8c00;
-        }
-
-        input, select {
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(-45deg, #f5f7fa, #e4e8f0, #f0f4ff, #e8f0ff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
         }
-
-        input:focus, select:focus {
-            border-color: #fb8c00;
-            box-shadow: 0 0 8px rgba(251, 140, 0, 0.5);
-            outline: none;
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-
-        /* زر الإرسال */
-        button {
-            background: linear-gradient(135deg, #ffa726, #fb8c00);
+        
+        .certificate-container {
+            width: 90%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(224, 224, 224, 0.5);
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .certificate-container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%);
             color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
+            padding: 30px;
+            text-align: center;
             position: relative;
             overflow: hidden;
         }
-
-        button:hover {
-            background: linear-gradient(135deg, #fb8c00, #ffa726);
-            transform: translateY(-2px);
-        }
-
-        button:after {
-            content: '';
+        
+        .header::before {
+            content: "";
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 0;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: 0;
+        }
+        
+        .school-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
             border-radius: 50%;
-            transform: scale(1, 1) translate(-50%);
-            transform-origin: 50% 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
+            animation: glow 2s infinite alternate;
+            display: block;
         }
-
-        button:focus:after {
-            animation: ripple 0.5s ease-out;
+        
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+            }
+            to {
+                box-shadow: 0 0 30px rgba(255, 255, 255, 0.9);
+            }
         }
-
-        @keyframes ripple {
-            0% { transform: scale(0, 0); opacity: 1; }
-            100% { transform: scale(50, 50); opacity: 0; }
+        
+        .header h1 {
+            margin: 15px 0 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
-
-        /* التذييل */
-        footer {
+        
+        .header p {
+            margin: 10px 0 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content {
+            padding: 40px;
+            position: relative;
+        }
+        
+        .message {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(249, 249, 249, 0.7);
+            border-left: 5px solid #4a6491;
+        }
+        
+        .highlight {
+            color: #4a6491;
+            font-weight: 700;
+        }
+        
+        .decoration {
+            position: absolute;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .leaf-1 {
+            top: 20px;
+            right: 20px;
+            font-size: 80px;
+            transform: rotate(30deg);
+        }
+        
+        .leaf-2 {
+            bottom: 20px;
+            left: 20px;
+            font-size: 60px;
+            transform: rotate(-20deg);
+        }
+        
+        .signature {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px dashed #ddd;
+        }
+        
+        .signature-item {
+            text-align: center;
+        }
+        
+        .signature-name {
+            font-weight: 700;
+            margin-top: 10px;
+            color: #4a6491;
+        }
+        
+        .back-button {
+            display: inline-block;
             margin-top: 30px;
-            padding: 15px;
-            background: #333;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #4a6491 0%, #2c3e50 100%);
             color: white;
-            font-size: 0.9em;
-            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        footer a {
-            color: #ffa726;
             text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.2);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
         }
-
-        footer a:hover {
-            text-decoration: underline;
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(44, 62, 80, 0.3);
+            background: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%);
         }
-
-        /* تأثيرات الظلام (Dark Mode) */
-        .dark-mode {
-            background: #333;
-            color: #fff;
+        
+        .patience-message {
+            background: linear-gradient(135deg, rgba(255, 248, 225, 0.7) 0%, rgba(255, 236, 179, 0.7) 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+            text-align: center;
+            font-weight: 500;
+            border: 1px solid #ffe082;
         }
-
-        .dark-mode header {
-            background: #222;
+        
+        .floating-leaves {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
         }
-
-        .dark-mode form {
-            background: #444;
-            color: #fff;
+        
+        .leaf {
+            position: absolute;
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.6;
+            animation: float 10s infinite linear;
         }
-
-        .dark-mode input, .dark-mode select {
-            background: #555;
-            color: #fff;
-            border-color: #777;
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+            }
         }
-
-        .dark-mode input:focus, .dark-mode select:focus {
-            border-color: #ffa726;
-            box-shadow: 0 0 8px rgba(255, 167, 38, 0.5);
-        }
-
-        .dark-mode button {
-            background: linear-gradient(135deg, #fb8c00, #ffa726);
-        }
-
-        .dark-mode footer {
-            background: #222;
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .school-logo {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .message {
+                font-size: 1.1rem;
+            }
+            
+            .content {
+                padding: 25px;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <button id="darkModeToggle"><i class="fas fa-moon"></i> الوضع المظلم</button>
-        <img src="https://e.top4top.io/p_3302it4a31.jpg" alt="شعار المدرسة">
-        <h1 id="typing-effect"></h1>
-        <div id="clock">جارٍ التحميل...</div>
-    </header>
-
-    <form id="busForm">
-        <label for="driverName"><i class="fas fa-user"></i> اسم السائق:</label>
-        <input type="text" id="driverName" name="driverName" required>
-
-        <label for="busNumber"><i class="fas fa-bus"></i> رقم الحافلة:</label>
-        <input type="text" id="busNumber" name="busNumber" required>
-
-        <label for="phoneNumber"><i class="fas fa-phone"></i> رقم الهاتف:</label>
-        <input type="text" id="phoneNumber" name="phoneNumber" required>
-
-        <label for="location"><i class="fas fa-map-marker-alt"></i> الموقع المخصص لنقل الطلبة:</label>
-        <input type="text" id="location" name="location" required>
-
-        <label for="busType"><i class="fas fa-bus"></i> نوع الحافلة:</label>
-        <select id="busType" name="busType" required>
-            <option value="صغيرة">صغيرة</option>
-            <option value="متوسطة">متوسطة</option>
-            <option value="كبيرة">كبيرة</option>
-        </select>
-
-        <label for="studentCount"><i class="fas fa-users"></i> عدد الطلبة الذين يقلهم:</label>
-        <input type="number" id="studentCount" name="studentCount" required>
-
-        <label for="tripCount"><i class="fas fa-road"></i> عدد النقلات:</label>
-        <input type="number" id="tripCount" name="tripCount" required>
-
-        <button type="submit"><i class="fas fa-paper-plane"></i> إرسال البيانات</button>
-    </form>
-
-    <footer>
-        تم تطويره بواسطة <a href="#" target="_blank">فريق المدرسة</a> | جميع الحقوق محفوظة &copy; 2023
-    </footer>
-
+    <div class="bg-animation"></div>
+    
+    <!-- الأوراق الطافية -->
+    <div class="floating-leaves" id="leaves-container"></div>
+    
+    <div class="certificate-container">
+        <div class="header">
+            <img src="https://e.top4top.io/p_3302it4a31.jpg" alt="شعار المدرسة" class="school-logo">
+            <h1>منصة الشهادات</h1>
+            <p>نحو مستقبل مشرق بالإنجازات</p>
+        </div>
+        
+        <div class="content">
+            <div class="decoration leaf-1">🌿</div>
+            <div class="decoration leaf-2">🌱</div>
+            
+            <div class="message">
+                <span class="highlight">رويدًا أيها الطامحون...</span> فإنّ الثمار لا تُقطف قبل نضجها،<br>
+                وشهادات المجد لا تُرفع إلا بعد أن تُروى بمداد التصحيح، وتُصاغ بأنامل التدقيق.<br><br>
+                
+                نحن على العهد… <span class="highlight">نُجيد الغرس، ونتقن الحصاد</span>، ونعمل بصمت ويقظة،<br>
+                لنقدّم لكم ما يليق بجِدّكم من شهادات تشرق بها منصتكم، وتزهو بها قلوبكم.<br><br>
+                
+                <span class="highlight">فاصبروا</span>؛ فإنّ في الانتظار ظفرًا،<br>
+                وفي كل لحظة صبر… ميلاد فرحة.
+            </div>
+            
+            <div class="patience-message">
+                الشهادات قيد الإعداد بدقة وعناية... سننهي العمل قريبًا بإذن الله
+            </div>
+            
+            <div class="signature">
+                <div class="signature-item">
+                    <p>مع خالص التقدير،</p>
+                    <div class="signature-name">فريق منصة الشهادات</div>
+                </div>
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="https://mohdschool.github.io/certificate/" class="back-button">العودة إلى المنصة</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            © 2023 منصة الشهادات - جميع الحقوق محفوظة
+        </div>
+    </div>
+    
     <script>
-        // الساعة الرقمية والتاريخ
-        function updateClock() {
-            const now = new Date();
-            const date = now.toLocaleDateString('ar-EG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            const time = now.toLocaleTimeString('ar-EG');
-            document.getElementById('clock').innerHTML = `${date} <br> ${time}`;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // تأثير الكتابة
-        const text = "نظام إدارة بيانات الحافلات";
-        let index = 0;
-        function typeWriter() {
-            if (index < text.length) {
-                document.getElementById("typing-effect").innerHTML += text.charAt(index);
-                index++;
-                setTimeout(typeWriter, 100);
+        // إنشاء الأوراق الطافية
+        document.addEventListener('DOMContentLoaded', function() {
+            const leavesContainer = document.getElementById('leaves-container');
+            const leafTypes = ['🍂', '🍁', '🌿', '🍀'];
+            
+            for (let i = 0; i < 15; i++) {
+                const leaf = document.createElement('div');
+                leaf.className = 'leaf';
+                leaf.innerHTML = leafTypes[Math.floor(Math.random() * leafTypes.length)];
+                
+                // خصائص عشوائية لكل ورقة
+                const size = Math.random() * 30 + 20;
+                const left = Math.random() * 100;
+                const animationDuration = Math.random() * 15 + 10;
+                const delay = Math.random() * 10;
+                const opacity = Math.random() * 0.5 + 0.3;
+                
+                leaf.style.fontSize = `${size}px`;
+                leaf.style.left = `${left}%`;
+                leaf.style.top = `${Math.random() * 100 + 100}%`;
+                leaf.style.animationDuration = `${animationDuration}s`;
+                leaf.style.animationDelay = `${delay}s`;
+                leaf.style.opacity = opacity;
+                leaf.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                leavesContainer.appendChild(leaf);
             }
-        }
-        typeWriter();
-
-        // إرسال البيانات إلى Google Sheets
-        document.getElementById('busForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const data = {
-                driverName: document.getElementById('driverName').value,
-                busNumber: document.getElementById('busNumber').value,
-                phoneNumber: document.getElementById('phoneNumber').value,
-                location: document.getElementById('location').value,
-                busType: document.getElementById('busType').value,
-                studentCount: document.getElementById('studentCount').value,
-                tripCount: document.getElementById('tripCount').value
-            };
-
-            fetch('https://script.google.com/macros/s/AKfycbwUyC4LzC8w5LwoT0QS0e8GqOhqNYN2p2RKUkTO5VX3pQnJud8kjAYL4ljVfSg-6tfd/exec', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.text())
-            .then(message => {
-                alert(message);
-                document.getElementById('busForm').reset(); // إعادة تعيين النموذج بعد الإرسال
-            })
-            .catch(error => console.error('Error:', error));
-        });
-
-        // تفعيل الوضع المظلم
-        document.getElementById('darkModeToggle').addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
         });
     </script>
 </body>
